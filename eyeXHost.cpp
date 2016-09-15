@@ -22,7 +22,10 @@ static TX_HANDLE g_hGlobalInteractorSnapshot = TX_EMPTY_HANDLE;
  * Initializes g_hGlobalInteractorSnapshot with an interactor that has the Gaze Point behavior.
  */
 bool eyeXHost::InitializeGlobalInteractorSnapshot(TX_CONTEXTHANDLE hContext) {
+	
 	TX_HANDLE hInteractor = TX_EMPTY_HANDLE;
+	TX_HANDLE hBehavior = TX_EMPTY_HANDLE; // eye pos
+	
 	TX_GAZEPOINTDATAPARAMS params = { TX_GAZEPOINTDATAMODE_LIGHTLYFILTERED };
 	bool success;
 
@@ -31,9 +34,18 @@ bool eyeXHost::InitializeGlobalInteractorSnapshot(TX_CONTEXTHANDLE hContext) {
 		InteractorId,
 		&g_hGlobalInteractorSnapshot,
 		&hInteractor) == TX_RESULT_OK;
-	success &= txCreateGazePointDataBehavior(hInteractor, &params) == TX_RESULT_OK;
-
-	txReleaseObject(&hInteractor);
+		
+	success &= txCreateGazePointDataBehavior(
+		hInteractor, 
+		&params) == TX_RESULT_OK;
+	
+	success &= txCreateInteractorBehavior(
+		hInteractor, 
+		&hBehavior, 
+		TX_INTERACTIONBEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK; // eye pos
+	
+	txReleaseObject(&hBehavior);
+    	txReleaseObject(&hInteractor);
 
 	return success;
 }
