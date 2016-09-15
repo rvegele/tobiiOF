@@ -131,7 +131,11 @@ void TX_CALLCONVENTION eyeXHost::HandleEvent(TX_CONSTHANDLE hAsyncData) {
 		OnGazeDataEvent(hBehavior);
 		txReleaseObject(&hBehavior);
 	}
-
+	
+	if (txGetEventBehavior(hEvent, &hBehavior, TX_INTERACTIONBEHAVIORTYPE_EYEPOSITIONDATA) == TX_RESULT_OK) {
+        	printf("gotcha!\n");
+        	txReleaseObject(&hBehavior);
+    	}
 	// NOTE since this is a very simple application with a single interactor and a single data stream, 
 	// our event handling code can be very simple too. A more complex application would typically have to 
 	// check for multiple behaviors and route events based on interactor IDs.
